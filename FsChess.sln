@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{35E99E1E-AAC5-4AA6-B4BC-E4142E7B6D35}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsChess.App", "src\FsChess.App\FsChess.App.fsproj", "{B3642F8B-1E32-4B51-A8C3-E7CF095D8808}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808} = {35E99E1E-AAC5-4AA6-B4BC-E4142E7B6D35}
 	EndGlobalSection
 EndGlobal
