@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Chess.fs" />
   </ItemGroup>
 
 </Project>
