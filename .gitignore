@@ -4,3 +4,5 @@
 .paket/
 packages/
 paket.lock
+
+.nuke/temp/

@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{56475B05
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsChess.App.Tests", "tests\FsChess.App.Tests\FsChess.App.Tests.fsproj", "{6CCC6EA3-CD19-43E3-9751-CD8AA2A75428}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C4DCAAD0-528D-47E1-A9CA-058A5BBAE434}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsChess.Build", "build\FsChess.Build\FsChess.Build.fsproj", "{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +32,14 @@ Global
 		{6CCC6EA3-CD19-43E3-9751-CD8AA2A75428}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CCC6EA3-CD19-43E3-9751-CD8AA2A75428}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CCC6EA3-CD19-43E3-9751-CD8AA2A75428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B3642F8B-1E32-4B51-A8C3-E7CF095D8808} = {35E99E1E-AAC5-4AA6-B4BC-E4142E7B6D35}
 		{6CCC6EA3-CD19-43E3-9751-CD8AA2A75428} = {56475B05-69D8-488F-9E0D-C9CAEC85B4EA}
+		{1DDFA47F-EA04-4418-8184-F0ABC83E5A4B} = {C4DCAAD0-528D-47E1-A9CA-058A5BBAE434}
 	EndGlobalSection
 EndGlobal

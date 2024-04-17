@@ -1,0 +1,80 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "detail": "Build FsChess for testing",
+      "type": "process",
+      "group": "build",
+      "command": "dotnet",
+      "args": ["nuke", "build"],
+      "echoCommand": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "instanceLimit": 1,
+        "reevaluateOnRerun": true,
+        "runOn": "default"
+      }
+    },
+    {
+      "label": "Test",
+      "detail": "Execute all FsChess tests",
+      "type": "process",
+      "group": "test",
+      "command": "dotnet",
+      "args": ["nuke", "test"],
+      "echoCommand": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "instanceLimit": 1,
+        "reevaluateOnRerun": true,
+        "runOn": "default"
+      }
+    },
+    {
+      "label": "Build NUKE",
+      "detail": "Build the NUKE build automation project",
+      "type": "process",
+      "group": "build",
+      "command": "dotnet",
+      "args": ["build", "--configuration", "Debug"],
+      "echoCommand": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/build/FsChess.Build"
+      },
+      "runOptions": {
+        "instanceLimit": 1,
+        "reevaluateOnRerun": true,
+        "runOn": "default"
+      }
+    },
+  ]
+}
