@@ -1,6 +1,7 @@
 source https://api.nuget.org/v3/index.json
 
 storage: none
+nuget Giraffe
 
 group Test
 source https://www.nuget.org/api/v2
@@ -10,5 +11,6 @@ nuget Expecto.BenchmarkDotNet
 nuget Expecto.FsCheck
 nuget Expecto.Hopac
 nuget Logary.Adapters.Facade
+nuget Microsoft.AspNetCore.TestHost
 nuget Microsoft.NET.Test.Sdk
 nuget YoloDev.Expecto.TestSdk
