@@ -27,6 +27,14 @@ let newGameTests =
                 Game.newGame
                 |> Game.board
                 |> Board.getAt square
-                |> Expect.equal (color, piece) ""
+                |> Expect.equal (color, piece) $"{color} {piece} starts at {square}"
             })
+
+        [
+            test "has no played moves" {
+                Game.newGame
+                |> Game.moves
+                |> Expect.isEmpty "no moves have been played yet"
+            }
+        ]
     ]

@@ -6,6 +6,7 @@ open System.Net
 
 open Giraffe
 open Expecto
+open FsChess.App
 open FsChess.Rest
 
 let getTestHost () =
@@ -14,7 +15,7 @@ let getTestHost () =
         .ConfigureServices(fun services ->
             services.AddGiraffe() |> ignore)
         .Configure(fun app ->
-            app.UseGiraffe Chess.webapi)
+            app.UseGiraffe <| Chess.webapi Chess.Api.api)
 
 let get (endpoint : string) =
     task {

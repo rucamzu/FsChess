@@ -20,8 +20,7 @@ type Move =
     | Capture of exn
     | CaptureEnPassant of exn
 
-type Game =
-    | Game of Board * Move list
+type Game = private Game of Board * Move list
 
 /// Files of a chess board, indexed from A to H
 module Files =
@@ -156,3 +155,14 @@ module Game =
         Game (board, [])
 
     let board = function Game (board, _) -> board
+
+    let moves = function Game (_, moves) -> moves
+
+type Api = {
+    NewGame : Game
+}
+
+module Api =
+    let api : Api = {
+        NewGame = Game.newGame
+    }

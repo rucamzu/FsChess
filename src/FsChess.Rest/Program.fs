@@ -7,6 +7,8 @@ open Microsoft.Extensions.Hosting
 
 open Giraffe
 
+open FsChess.App
+
 [<EntryPoint>]
 let main args =
 
@@ -20,7 +22,7 @@ let main args =
     // app.UseHttpsRedirection()
     // app.UseAuthorization()
     // app.MapControllers()
-    app.UseGiraffe Chess.webapi
+    app.UseGiraffe <| Chess.webapi Chess.Api.api
 
     app.Run()
 
