@@ -126,8 +126,7 @@ module Board =
     let empty = Board Map.empty
 
     let place color piece square = function
-        | Board pieces ->
-            pieces |> Map.add square (color, piece) |> Board
+        | Board pieces -> pieces |> Map.add square (color, piece) |> Board
 
     let placeMany color piece squares board =
         squares
@@ -135,6 +134,13 @@ module Board =
 
     let getAt square = function
         | Board pieces -> pieces |> Map.tryFind square |> Option.get
+
+    let getAll = function
+        | Board pieces ->
+            pieces
+            |> Map.toSeq
+            |> Seq.map (fun (square, (color, piece)) -> square, color, piece)
+            |> Seq.sortBy (fun (square, _, _) -> square)
 
 module Game =
     let newGame =
