@@ -143,6 +143,8 @@ module Board =
             |> Seq.sortBy (fun (square, _, _) -> square)
 
 module Game =
+
+    /// A new game with all pieces in their starting positions and no moves played.
     let newGame =
         let board =
             Board.empty
@@ -160,9 +162,11 @@ module Game =
             |> Board.placeMany Black Pawn [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
         Game (board, [])
 
+    /// Returns the current board for a given game.
     let board = function Game (board, _) -> board
 
-    let moves = function Game (_, moves) -> moves
+    /// Returns the sorted list of played moves for a given game.
+    let played = function Game (_, played) -> played
 
 type Api = {
     NewGame : Game

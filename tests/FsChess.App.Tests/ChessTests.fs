@@ -33,7 +33,7 @@ let newGameTests =
         [
             test "has no played moves" {
                 Game.newGame
-                |> Game.moves
+                |> Game.played
                 |> Expect.isEmpty "no moves have been played yet"
             }
         ]
