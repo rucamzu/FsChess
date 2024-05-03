@@ -21,13 +21,13 @@ let newGameTests =
             Black, King, [ Squares.E8 ]
             Black, Pawn, [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
         ]
-        |> List.collect (fun (color, piece, squares) -> squares |> List.map (fun square -> (color, piece, square)))
-        |> List.map (fun (color, piece, square) ->
-            test $"starts with {color} {piece} at {square}" {
+        |> List.collect (fun (colour, piece, squares) -> squares |> List.map (fun square -> (colour, piece, square)))
+        |> List.map (fun (colour, piece, square) ->
+            test $"starts with {colour} {piece} at {square}" {
                 Game.newGame
                 |> Game.board
                 |> Board.getAt square
-                |> Expect.equal (color, piece) $"{color} {piece} is not initially placed at {square}"
+                |> Expect.equal (colour, piece) $"{colour} {piece} is not initially placed at {square}"
             })
 
         [
@@ -40,7 +40,7 @@ let newGameTests =
             test "starts with White moving" {
                 Game.newGame
                 |> Game.playable
-                |> Expect.all (Move.color >> ((=) White)) "New game allows playable Black moves"
+                |> Expect.all (Move.colour >> ((=) White)) "New game allows playable Black moves"
             } 
         ]
 
@@ -54,12 +54,12 @@ let newGameTests =
             White, Pawn, Squares.G2, [ Squares.G3 ]
             White, Pawn, Squares.H2, [ Squares.H3 ]
         ]
-        |> List.collect (fun (color, piece, atSquare, toSquares) -> toSquares |> List.map (fun toSquare -> (color, piece, atSquare, toSquare)))
-        |> List.map (fun (color, piece, atSquare, toSquare) ->
-            test $"allows moving {color} {piece} from {atSquare} to {toSquare}" {
+        |> List.collect (fun (colour, piece, atSquare, toSquares) -> toSquares |> List.map (fun toSquare -> (colour, piece, atSquare, toSquare)))
+        |> List.map (fun (colour, piece, atSquare, toSquare) ->
+            test $"allows moving {colour} {piece} from {atSquare} to {toSquare}" {
                 Game.newGame
                 |> Game.playable
-                |> Expect.contains (Move.makeMove color piece atSquare toSquare)  $"{color} {piece} at initial {atSquare} cannot move to {toSquare}"
+                |> Expect.contains (Move.makeMove colour piece atSquare toSquare)  $"{colour} {piece} at initial {atSquare} cannot move to {toSquare}"
             })
 
     ]

@@ -12,8 +12,8 @@ type Game = {
 
 module Game =
 
-    let private ofColorPiece color piece =
-        match (color, piece) with
+    let private ofColourPiece colour piece =
+        match (colour, piece) with
         | White, King -> "♔"
         | White, Queen -> "♕"
         | White, Rook -> "♖"
@@ -27,11 +27,11 @@ module Game =
         | Black, Knight -> "♘"
         | Black, Pawn -> "♙"
 
-    let private ofSquareColorPiece color piece square =
-        $"{ofColorPiece color piece}{square}"
+    let private ofSquareColourPiece colour piece square =
+        $"{ofColourPiece colour piece}{square}"
 
     let private ofBoard =
-        Board.getAll >> Seq.map (uncurry3 ofSquareColorPiece) >> Seq.toList
+        Board.getAll >> Seq.map (uncurry3 ofSquareColourPiece) >> Seq.toList
 
     let ofGame (game : FsChess.App.Chess.Game) : Game = {
         Board = game |> Game.board |> ofBoard

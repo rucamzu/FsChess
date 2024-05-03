@@ -4,7 +4,7 @@ open FsChess.Common.Functions
 
 type Piece = Pawn | Knight | Bishop | Rook | Queen | King
 
-type Color = White | Black
+type Colour = White | Black
 
 type File = A | B | C | D | E | F | G | H
 
@@ -14,10 +14,10 @@ type Rank = private Rank of int
 type Square = private Square of File * Rank
     with override this.ToString() = match this with Square (file, rank) -> $"{file}{rank}"
     
-type Board = private Board of Map<Square, Color * Piece>
+type Board = private Board of Map<Square, Colour * Piece>
 
 type Move =
-    | Move of Color * Piece * Square * Square
+    | Move of Colour * Piece * Square * Square
 
 type Game = private Game of Board * Move list * Move list
 
@@ -144,12 +144,12 @@ module Square =
 module Board =
     let empty = Board Map.empty
 
-    let place color piece square = function
-        | Board pieces -> pieces |> Map.add square (color, piece) |> Board
+    let place colour piece square = function
+        | Board pieces -> pieces |> Map.add square (colour, piece) |> Board
 
-    let placeMany color piece squares board =
+    let placeMany colour piece squares board =
         squares
-        |> Seq.fold (fun board' square-> place color piece square board') board
+        |> Seq.fold (fun board' square-> place colour piece square board') board
 
     let getAt square = function
         | Board pieces -> pieces |> Map.tryFind square |> Option.get
@@ -158,21 +158,21 @@ module Board =
         | Board pieces ->
             pieces
             |> Map.toSeq
-            |> Seq.map (fun (square, (color, piece)) -> color, piece, square)
+            |> Seq.map (fun (square, (colour, piece)) -> colour, piece, square)
             |> Seq.sortBy (fun (square, _, _) -> square)
 
 module Move =
 
-    /// Returns the color of the moved piece.
-    let color = function
-        | Move (color, _, _, _) -> color
+    /// Returns the colour of the moved piece.
+    let colour = function
+        | Move (colour, _, _, _) -> colour
 
     /// Returns the moved piece.
     let piece = function
         | Move (_, piece, _, _) -> piece
 
-    let makeMove color piece atSquare toSquare
-        = Move (color, piece, atSquare, toSquare)
+    let makeMove colour piece atSquare toSquare
+        = Move (colour, piece, atSquare, toSquare)
 
 module Game =
 
@@ -188,32 +188,32 @@ module Game =
     /// Returns the set of all playable moves for a given game.
     let playable = function Game (_, _, playable) -> playable
 
-    /// Returns the color of the player who plays next
+    /// Returns the colour of the player who plays next
     let playingNext = function
         | Game (_, [], _) -> White
         | Game (_, played, _) ->
-            match (played |> List.last |> Move.color) with
+            match (played |> List.last |> Move.colour) with
                 | White -> Black
                 | Black -> White
 
     /// Functions to compute playable moves in a game of chess
     module private PlayableMoves =
 
-        let forPawn game color atSquare =
-            match color with
+        let forPawn game colour atSquare =
+            match colour with
             | White -> [ Move.makeMove White Pawn atSquare (Square.atNextRank atSquare) ]
             | Black -> [ Move.makeMove Black Pawn atSquare (Square.atNextRank atSquare) ]
 
-        let forPiece game color piece atSquare =
+        let forPiece game colour piece atSquare =
             match piece with
-            | Pawn -> forPawn game color atSquare
+            | Pawn -> forPawn game colour atSquare
             | _ -> []
 
         let forGame game =
             game
             |> board
             |> Board.getAll
-            |> Seq.filter (fun (color, _, _) -> color = (playingNext game))
+            |> Seq.filter (fun (colour, _, _) -> colour = (playingNext game))
             |> Seq.collect (uncurry3 (forPiece game))
             |> Seq.toList
 
