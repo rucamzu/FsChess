@@ -182,13 +182,13 @@ module Game =
     /// Returns the current board for a given game.
     let board = function Game (board, _, _) -> board
 
-    /// Returns the list of all played moves for a given game, sorted by the order in which they were played.
-    let played = function Game (_, played, _) -> played
+    /// Returns the list of all the moves played on a given game, in the order they were played.
+    let playedMoves = function Game (_, played, _) -> played
 
-    /// Returns the set of all playable moves for a given game.
-    let playable = function Game (_, _, playable) -> playable
+    /// Returns the set of all moves that can be played next on a given game.
+    let playableMoves = function Game (_, _, playable) -> playable
 
-    /// Returns the colour of the player who plays next
+    /// Returns the colour of the player who plays next ona given name.
     let playingNext = function
         | Game (_, [], _) -> White
         | Game (_, played, _) ->
@@ -196,19 +196,22 @@ module Game =
                 | White -> Black
                 | Black -> White
 
-    /// Functions to compute playable moves in a game of chess
+    /// Functions to compute playable moves in a game of chess.
     module private PlayableMoves =
 
+        /// Returns all the moves that can be played next with a given pawn on a given game.
         let forPawn game colour atSquare =
             match colour with
             | White -> [ Move.makeMove White Pawn atSquare (Square.atNextRank atSquare) ]
             | Black -> [ Move.makeMove Black Pawn atSquare (Square.atNextRank atSquare) ]
 
+        /// Returns all the moves that can be played next with a given piece on a given game.
         let forPiece game colour piece atSquare =
             match piece with
             | Pawn -> forPawn game colour atSquare
             | _ -> []
 
+        /// Returns all the moves that can be played next on a given game.
         let forGame game =
             game
             |> board

@@ -33,13 +33,13 @@ let newGameTests =
         [
             test "has no played moves" {
                 Game.newGame
-                |> Game.played
+                |> Game.playedMoves
                 |> Expect.isEmpty "New game already has played moves"
             }
 
             test "starts with White moving" {
                 Game.newGame
-                |> Game.playable
+                |> Game.playableMoves
                 |> Expect.all (Move.colour >> ((=) White)) "New game allows playable moves by Black"
             } 
         ]
@@ -58,7 +58,7 @@ let newGameTests =
         |> List.map (fun (colour, piece, atSquare, toSquare) ->
             test $"allows moving {colour} {piece} from {atSquare} to {toSquare}" {
                 Game.newGame
-                |> Game.playable
+                |> Game.playableMoves
                 |> Expect.contains (Move.makeMove colour piece atSquare toSquare)  $"New game does not allow {colour} {piece} at initial {atSquare} to move to {toSquare}"
             })
 
