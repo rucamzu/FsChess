@@ -176,6 +176,9 @@ module Move =
 
 module Game =
 
+    let private noMovesPlayed = []
+    let private noMovesPlayable = []
+
     /// Returns the current board for a given game.
     let board = function Game (board, _, _) -> board
 
@@ -185,9 +188,15 @@ module Game =
     /// Returns the set of all playable moves for a given game.
     let playable = function Game (_, _, playable) -> playable
 
-    let private noMovesPlayed = []
-    let private noMovesPlayable = []
+    /// Returns the color of the player who plays next
+    let playingNext = function
+        | Game (_, [], _) -> White
+        | Game (_, played, _) ->
+            match (played |> List.last |> Move.color) with
+                | White -> Black
+                | Black -> White
 
+    /// Functions to compute playable moves in a game of chess
     module private PlayableMoves =
 
         let forPawn game color atSquare =
@@ -204,6 +213,7 @@ module Game =
             game
             |> board
             |> Board.getAll
+            |> Seq.filter (fun (color, _, _) -> color = (playingNext game))
             |> Seq.collect (uncurry3 (forPiece game))
             |> Seq.toList
 

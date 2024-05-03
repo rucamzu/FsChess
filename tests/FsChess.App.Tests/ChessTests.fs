@@ -36,6 +36,12 @@ let newGameTests =
                 |> Game.played
                 |> Expect.isEmpty "no moves have been played yet"
             }
+
+            test "starts with White moving" {
+                Game.newGame
+                |> Game.playable
+                |> Expect.all (Move.color >> ((=) White)) "New game allows playable Black moves"
+            } 
         ]
 
         [
@@ -55,4 +61,5 @@ let newGameTests =
                 |> Game.playable
                 |> Expect.contains (Move.makeMove color piece atSquare toSquare)  $"{color} {piece} at initial {atSquare} cannot move to {toSquare}"
             })
+
     ]

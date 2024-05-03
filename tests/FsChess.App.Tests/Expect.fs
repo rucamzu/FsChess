@@ -2,9 +2,11 @@ module FsChess.App.Tests.Expect
 
 open Expecto
 
-let equal expected message actual = Expecto.Expect.equal actual expected message
+let all predicate message sequence = Expecto.Expect.all sequence predicate message
 
 let contains element message sequence = Expecto.Expect.contains sequence element message
+
+let equal expected message actual = Expecto.Expect.equal actual expected message
 
 let exists predicate message sequence = Expecto.Expect.exists sequence predicate message
 
