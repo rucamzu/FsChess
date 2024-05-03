@@ -1,5 +1,7 @@
 module FsChess.App.Chess
 
+open FsChess.Common.Functions
+
 type Piece = Pawn | Knight | Bishop | Rook | Queen | King
 
 type Color = White | Black
@@ -15,12 +17,9 @@ type Square = private Square of File * Rank
 type Board = private Board of Map<Square, Color * Piece>
 
 type Move =
-    | Move of exn
-    | Castle of exn
-    | Capture of exn
-    | CaptureEnPassant of exn
+    | Move of Color * Piece * Square * Square
 
-type Game = private Game of Board * Move list
+type Game = private Game of Board * Move list * Move list
 
 /// Files of a chess board, indexed from A to H
 module Files =
@@ -35,16 +34,25 @@ module Files =
 
 /// Ranks of a chess board, indexed from 1 to 8
 module Ranks =
-    let private make = Rank
+    let _1 = Rank 1
+    let _2 = Rank 2
+    let _3 = Rank 3
+    let _4 = Rank 4
+    let _5 = Rank 5
+    let _6 = Rank 6
+    let _7 = Rank 7
+    let _8 = Rank 8
 
-    let _1 = make 1
-    let _2 = make 2
-    let _3 = make 3
-    let _4 = make 4
-    let _5 = make 5
-    let _6 = make 6
-    let _7 = make 7
-    let _8 = make 8
+/// Functions to manipulate ranks in a chess board
+module Rank =
+
+    let next = function
+        | Rank 8 -> failwith "Illegal"
+        | Rank rank -> Rank (rank + 1)
+
+    let prev = function
+        | Rank 1 -> failwith "Illegal"
+        | Rank rank -> Rank (rank - 1)
 
 /// Squares of a chess board, indexed by file and rank
 module Squares =
@@ -122,6 +130,17 @@ module Squares =
     let H7 = make Files.H Ranks._7
     let H8 = make Files.H Ranks._8
 
+/// Functions to manipulate squares in a chess board
+module Square =
+
+    let file = function Square (file, _) -> file
+
+    let rank = function Square (_, rank) -> rank
+
+    let atNextRank = function Square (file, rank) -> Square (file, Rank.next rank)
+
+    let atPrevRank = function Square (file, rank) -> Square (file, Rank.prev rank)
+
 module Board =
     let empty = Board Map.empty
 
@@ -139,10 +158,54 @@ module Board =
         | Board pieces ->
             pieces
             |> Map.toSeq
-            |> Seq.map (fun (square, (color, piece)) -> square, color, piece)
+            |> Seq.map (fun (square, (color, piece)) -> color, piece, square)
             |> Seq.sortBy (fun (square, _, _) -> square)
 
+module Move =
+
+    /// Returns the color of the moved piece.
+    let color = function
+        | Move (color, _, _, _) -> color
+
+    /// Returns the moved piece.
+    let piece = function
+        | Move (_, piece, _, _) -> piece
+
+    let makeMove color piece atSquare toSquare
+        = Move (color, piece, atSquare, toSquare)
+
 module Game =
+
+    /// Returns the current board for a given game.
+    let board = function Game (board, _, _) -> board
+
+    /// Returns the list of all played moves for a given game, sorted by the order in which they were played.
+    let played = function Game (_, played, _) -> played
+
+    /// Returns the set of all playable moves for a given game.
+    let playable = function Game (_, _, playable) -> playable
+
+    let private noMovesPlayed = []
+    let private noMovesPlayable = []
+
+    module private PlayableMoves =
+
+        let forPawn game color atSquare =
+            match color with
+            | White -> [ Move.makeMove White Pawn atSquare (Square.atNextRank atSquare) ]
+            | Black -> [ Move.makeMove Black Pawn atSquare (Square.atNextRank atSquare) ]
+
+        let forPiece game color piece atSquare =
+            match piece with
+            | Pawn -> forPawn game color atSquare
+            | _ -> []
+
+        let forGame game =
+            game
+            |> board
+            |> Board.getAll
+            |> Seq.collect (uncurry3 (forPiece game))
+            |> Seq.toList
 
     /// A new game with all pieces in their starting positions and no moves played.
     let newGame =
@@ -160,13 +223,8 @@ module Game =
             |> Board.place Black Queen Squares.D8
             |> Board.place Black King Squares.E8
             |> Board.placeMany Black Pawn [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
-        Game (board, [])
 
-    /// Returns the current board for a given game.
-    let board = function Game (board, _) -> board
-
-    /// Returns the sorted list of played moves for a given game.
-    let played = function Game (_, played) -> played
+        Game (board, noMovesPlayed, Game (board, noMovesPlayed, noMovesPlayable) |> PlayableMoves.forGame)
 
 type Api = {
     NewGame : Game

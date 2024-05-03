@@ -27,7 +27,7 @@ module Game =
         | Black, Knight -> "♘"
         | Black, Pawn -> "♙"
 
-    let private ofSquareColorPiece square color piece =
+    let private ofSquareColorPiece color piece square =
         $"{ofColorPiece color piece}{square}"
 
     let private ofBoard =

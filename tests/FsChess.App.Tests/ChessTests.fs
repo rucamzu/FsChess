@@ -27,7 +27,7 @@ let newGameTests =
                 Game.newGame
                 |> Game.board
                 |> Board.getAt square
-                |> Expect.equal (color, piece) $"{color} {piece} starts at {square}"
+                |> Expect.equal (color, piece) $"{color} {piece} is not initially placed at {square}"
             })
 
         [
@@ -37,4 +37,22 @@ let newGameTests =
                 |> Expect.isEmpty "no moves have been played yet"
             }
         ]
+
+        [
+            White, Pawn, Squares.A2, [ Squares.A3 ]
+            White, Pawn, Squares.B2, [ Squares.B3 ]
+            White, Pawn, Squares.C2, [ Squares.C3 ]
+            White, Pawn, Squares.D2, [ Squares.D3 ]
+            White, Pawn, Squares.E2, [ Squares.E3 ]
+            White, Pawn, Squares.F2, [ Squares.F3 ]
+            White, Pawn, Squares.G2, [ Squares.G3 ]
+            White, Pawn, Squares.H2, [ Squares.H3 ]
+        ]
+        |> List.collect (fun (color, piece, atSquare, toSquares) -> toSquares |> List.map (fun toSquare -> (color, piece, atSquare, toSquare)))
+        |> List.map (fun (color, piece, atSquare, toSquare) ->
+            test $"allows moving {color} {piece} from {atSquare} to {toSquare}" {
+                Game.newGame
+                |> Game.playable
+                |> Expect.contains (Move.makeMove color piece atSquare toSquare)  $"{color} {piece} at initial {atSquare} cannot move to {toSquare}"
+            })
     ]
