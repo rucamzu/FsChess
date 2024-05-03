@@ -1,10 +1,14 @@
 module FsChess.App.Chess
 
 open FsChess.Common.Functions
+open FsChess.Common.Tuples
 
-type Piece = Pawn | Knight | Bishop | Rook | Queen | King
+type Chessman = Pawn | Knight | Bishop | Rook | Queen | King
 
 type Colour = White | Black
+
+type Piece = private Piece of Colour * Chessman
+    with override this.ToString() = match this with Piece (colour, chessman) -> $"{colour} {chessman}"
 
 type File = A | B | C | D | E | F | G | H
 
@@ -14,14 +18,46 @@ type Rank = private Rank of int
 type Square = private Square of File * Rank
     with override this.ToString() = match this with Square (file, rank) -> $"{file}{rank}"
     
-type Board = private Board of Map<Square, Colour * Piece>
+type Board = private Board of Map<Square, Piece>
 
 type Move =
-    | Move of Colour * Piece * Square * Square
+    | Move of Piece * Square * Square
 
 type Game = private Game of Board * Move list * Move list
 
-/// Files of a chess board, indexed from A to H
+/// Pieces on a chess game.
+module Pieces =
+
+    let private make = curry Piece
+
+    let WhiteKing = make White King
+    let WhiteQueen = make White Queen
+    let WhiteRook = make White Rook
+    let WhiteBishop = make White Bishop
+    let WhiteKnight = make White Knight
+    let WhitePawn = make White Pawn
+    let BlackKing = make Black King
+    let BlackQueen = make Black Queen
+    let BlackRook = make Black Rook
+    let BlackBishop = make Black Bishop
+    let BlackKnight = make Black Knight
+    let BlackPawn = make Black Pawn
+
+/// Functions to query chess pieces.
+module Piece =
+
+    let internal make = curry Piece
+
+    /// Returns the colour of a given chess piece.
+    let colour = function Piece (colour, _) -> colour
+
+    /// Returns the shape of a given chess piece.
+    let chessman = function Piece (_, chessman) -> chessman
+
+    /// Returns whether a given piece is of a given colour.
+    let ofColour colour = function Piece (colour', _) -> colour = colour'
+
+/// Files of a chess board, indexed from A to H.
 module Files =
     let A = File.A
     let B = File.B
@@ -32,7 +68,7 @@ module Files =
     let G = File.G
     let H = File.H
 
-/// Ranks of a chess board, indexed from 1 to 8
+/// Ranks of a chess board, indexed from 1 to 8.
 module Ranks =
     let _1 = Rank 1
     let _2 = Rank 2
@@ -43,7 +79,7 @@ module Ranks =
     let _7 = Rank 7
     let _8 = Rank 8
 
-/// Functions to manipulate ranks in a chess board
+/// Functions to query and visit ranks on a chess board.
 module Rank =
 
     let next = function
@@ -54,7 +90,7 @@ module Rank =
         | Rank 1 -> failwith "Illegal"
         | Rank rank -> Rank (rank - 1)
 
-/// Squares of a chess board, indexed by file and rank
+/// Squares of a chess board, indexed by file and rank.
 module Squares =
     let private make file rank = Square (file, rank)
 
@@ -130,7 +166,7 @@ module Squares =
     let H7 = make Files.H Ranks._7
     let H8 = make Files.H Ranks._8
 
-/// Functions to manipulate squares in a chess board
+/// Functions to query and visit squares on a chess board.
 module Square =
 
     let file = function Square (file, _) -> file
@@ -141,15 +177,16 @@ module Square =
 
     let atPrevRank = function Square (file, rank) -> Square (file, Rank.prev rank)
 
+/// Functions to query and manipulate a chess board.
 module Board =
     let empty = Board Map.empty
 
-    let place colour piece square = function
-        | Board pieces -> pieces |> Map.add square (colour, piece) |> Board
+    let place piece atSquare = function
+        | Board pieces -> pieces |> (Map.add atSquare piece) |> Board
 
-    let placeMany colour piece squares board =
+    let placeMany piece squares board =
         squares
-        |> Seq.fold (fun board' square-> place colour piece square board') board
+        |> Seq.fold (fun board' square-> place piece square board') board
 
     let getAt square = function
         | Board pieces -> pieces |> Map.tryFind square |> Option.get
@@ -158,21 +195,17 @@ module Board =
         | Board pieces ->
             pieces
             |> Map.toSeq
-            |> Seq.map (fun (square, (colour, piece)) -> colour, piece, square)
-            |> Seq.sortBy (fun (square, _, _) -> square)
+            |> Seq.sortBy (fun (square, _) -> square)
 
+/// Functions to query and manipulate moves on a chess game .
 module Move =
 
-    /// Returns the colour of the moved piece.
-    let colour = function
-        | Move (colour, _, _, _) -> colour
-
-    /// Returns the moved piece.
+    /// Returns the moved chess piece.
     let piece = function
-        | Move (_, piece, _, _) -> piece
+        | Move (piece, _, _) -> piece
 
-    let makeMove colour piece atSquare toSquare
-        = Move (colour, piece, atSquare, toSquare)
+    let makeMove piece atSquare toSquare
+        = Move (piece, atSquare, toSquare)
 
 module Game =
 
@@ -192,7 +225,7 @@ module Game =
     let playingNext = function
         | Game (_, [], _) -> White
         | Game (_, played, _) ->
-            match (played |> List.last |> Move.colour) with
+            match (played |> List.last |> Move.piece |> Piece.colour) with
                 | White -> Black
                 | Black -> White
 
@@ -202,13 +235,13 @@ module Game =
         /// Returns all the moves that can be played next with a given pawn on a given game.
         let forPawn game colour atSquare =
             match colour with
-            | White -> [ Move.makeMove White Pawn atSquare (Square.atNextRank atSquare) ]
-            | Black -> [ Move.makeMove Black Pawn atSquare (Square.atNextRank atSquare) ]
+            | White -> [ Move.makeMove Pieces.WhitePawn atSquare (Square.atNextRank atSquare) ]
+            | Black -> [ Move.makeMove Pieces.BlackPawn atSquare (Square.atNextRank atSquare) ]
 
         /// Returns all the moves that can be played next with a given piece on a given game.
-        let forPiece game colour piece atSquare =
-            match piece with
-            | Pawn -> forPawn game colour atSquare
+        let forPiece game piece atSquare =
+            match piece |> Piece.chessman with
+            | Pawn -> forPawn game (Piece.colour piece) atSquare
             | _ -> []
 
         /// Returns all the moves that can be played next on a given game.
@@ -216,26 +249,30 @@ module Game =
             game
             |> board
             |> Board.getAll
-            |> Seq.filter (fun (colour, _, _) -> colour = (playingNext game))
-            |> Seq.collect (uncurry3 (forPiece game))
+            |> Seq.filter (fun (_, piece) -> Piece.ofColour (playingNext game) piece)
+            |> Seq.map flip
+            |> Seq.collect (uncurry2 (forPiece game))
             |> Seq.toList
 
     /// A new game with all pieces in their starting positions and no moves played.
     let newGame =
+        let place colour chessman = Board.place (Piece.make colour chessman)
+        let placeMany colour chessman = Board.placeMany (Piece.make colour chessman)
+
         let board =
             Board.empty
-            |> Board.placeMany White Rook [ Squares.A1; Squares.H1 ]
-            |> Board.placeMany White Knight [ Squares.B1; Squares.G1 ]
-            |> Board.placeMany White Bishop [ Squares.C1; Squares.F1 ]
-            |> Board.place White Queen Squares.D1
-            |> Board.place White King Squares.E1
-            |> Board.placeMany White Pawn [ Squares.A2; Squares.B2; Squares.C2; Squares.D2; Squares.E2; Squares.F2; Squares.G2; Squares.H2 ]
-            |> Board.placeMany Black Rook [ Squares.A8; Squares.H8 ]
-            |> Board.placeMany Black Knight [ Squares.B8; Squares.G8 ]
-            |> Board.placeMany Black Bishop [ Squares.C8; Squares.F8 ]
-            |> Board.place Black Queen Squares.D8
-            |> Board.place Black King Squares.E8
-            |> Board.placeMany Black Pawn [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
+            |> placeMany White Rook [ Squares.A1; Squares.H1 ]
+            |> placeMany White Knight [ Squares.B1; Squares.G1 ]
+            |> placeMany White Bishop [ Squares.C1; Squares.F1 ]
+            |> place White Queen Squares.D1
+            |> place White King Squares.E1
+            |> placeMany White Pawn [ Squares.A2; Squares.B2; Squares.C2; Squares.D2; Squares.E2; Squares.F2; Squares.G2; Squares.H2 ]
+            |> placeMany Black Rook [ Squares.A8; Squares.H8 ]
+            |> placeMany Black Knight [ Squares.B8; Squares.G8 ]
+            |> placeMany Black Bishop [ Squares.C8; Squares.F8 ]
+            |> place Black Queen Squares.D8
+            |> place Black King Squares.E8
+            |> placeMany Black Pawn [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
 
         Game (board, noMovesPlayed, Game (board, noMovesPlayed, noMovesPlayable) |> PlayableMoves.forGame)
 
