@@ -27,20 +27,20 @@ let newGameTests =
                 Game.newGame
                 |> Game.board
                 |> Board.getAt square
-                |> Expect.equal (colour, piece) $"{colour} {piece} is not initially placed at {square}"
+                |> Expect.equal (colour, piece) $"New game does not have {colour} {piece} initially placed at {square}"
             })
 
         [
             test "has no played moves" {
                 Game.newGame
                 |> Game.played
-                |> Expect.isEmpty "no moves have been played yet"
+                |> Expect.isEmpty "New game already has played moves"
             }
 
             test "starts with White moving" {
                 Game.newGame
                 |> Game.playable
-                |> Expect.all (Move.colour >> ((=) White)) "New game allows playable Black moves"
+                |> Expect.all (Move.colour >> ((=) White)) "New game allows playable moves by Black"
             } 
         ]
 
@@ -59,7 +59,7 @@ let newGameTests =
             test $"allows moving {colour} {piece} from {atSquare} to {toSquare}" {
                 Game.newGame
                 |> Game.playable
-                |> Expect.contains (Move.makeMove colour piece atSquare toSquare)  $"{colour} {piece} at initial {atSquare} cannot move to {toSquare}"
+                |> Expect.contains (Move.makeMove colour piece atSquare toSquare)  $"New game does not allow {colour} {piece} at initial {atSquare} to move to {toSquare}"
             })
 
     ]
