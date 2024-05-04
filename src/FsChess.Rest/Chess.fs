@@ -3,44 +3,27 @@ module FsChess.Rest.Chess
 open Giraffe
 
 open FsChess.App.Chess
+open FsChess.App.ChessNotation
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
 type Game = {
     Board : string list
-    // Moves : string list
+    PlayedMoves : string list
+    PlayableMoves : string list
 }
 
-module Game =
+let private ofBoard =
+    Board.getAll >> Seq.map (flip >> uncurry2 annotatePlayedPiece) >> Seq.toList
 
-    let private ofPiece piece =
-        match (Piece.colour piece, Piece.chessman piece) with
-        | White, King -> "♔"
-        | White, Queen -> "♕"
-        | White, Rook -> "♖"
-        | White, Bishop -> "♗"
-        | White, Knight -> "♘"
-        | White, Pawn -> "♙"
-        | Black, King -> "♔"
-        | Black, Queen -> "♕"
-        | Black, Rook -> "♖"
-        | Black, Bishop -> "♗"
-        | Black, Knight -> "♘"
-        | Black, Pawn -> "♙"
-
-    let private ofPlayedPiece piece atSquare =
-        $"{ofPiece piece}{atSquare}"
-
-    let private ofBoard =
-        Board.getAll >> Seq.map (flip >> uncurry2 ofPlayedPiece) >> Seq.toList
-
-    let ofGame (game : FsChess.App.Chess.Game) : Game = {
-        Board = game |> Game.board |> ofBoard
-        // Moves = game |> Game.moves |> mapMoves
-    }
+let ofGame (game : FsChess.App.Chess.Game) : Game = {
+    Board = game |> Game.board |> ofBoard
+    PlayedMoves = game |> Game.playedMoves |> List.map annotateMove
+    PlayableMoves = game |> Game.playableMoves |> List.map annotateMove
+}
 
 let webapi (api : FsChess.App.Chess.Api) : HttpHandler =
     choose [
         route "/chess/games/new" >=>
-            json (api.NewGame |> Game.ofGame)
+            json (api.NewGame |> ofGame)
     ]

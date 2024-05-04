@@ -1,7 +1,8 @@
 module FsChess.App.Tests.ChessTests
 
-open FsChess.App.Chess
 open Expecto
+
+open FsChess.App.Chess
 open FsChess.App.Tests
 
 [<Tests>]
