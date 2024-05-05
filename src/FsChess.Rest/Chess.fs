@@ -13,17 +13,24 @@ type Game = {
     PlayableMoves : string list
 }
 
-let private ofBoard =
-    Board.getAll >> Seq.map (flip >> uncurry2 annotatePlayedPiece) >> Seq.toList
+module DTO =
 
-let ofGame (game : FsChess.App.Chess.Game) : Game = {
-    Board = game |> Game.board |> ofBoard
-    PlayedMoves = game |> Game.playedMoves |> List.map annotateMove
-    PlayableMoves = game |> Game.playableMoves |> List.map annotateMove
-}
+    let private buildBoard =
+        Game.board >> Board.getAll >> Seq.map (flip >> uncurry2 annotatePlayedPiece) >> Seq.toList
+
+    let buildPlayedMoves =
+        Game.playedMoves >> List.map annotateMove
+
+    let buildPlayableMoves =
+        Game.playableMoves >> List.map annotateMove
+
+    let buildGame (game : FsChess.App.Chess.Game) : Game = {
+        Board = game |> buildBoard
+        PlayedMoves = game |> buildPlayedMoves
+        PlayableMoves = game |> buildPlayableMoves
+    }
 
 let webapi (api : FsChess.App.Chess.Api) : HttpHandler =
     choose [
-        route "/chess/games/new" >=>
-            json (api.NewGame |> ofGame)
+        route "/chess/games/new" >=> json (api.NewGame |> DTO.buildGame)
     ]
