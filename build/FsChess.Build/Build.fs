@@ -37,7 +37,7 @@ type Build() =
     member this.Test : Target = Target(fun target ->
         target
             .Description("Run all tests")
-            .DependsOn(this.Build) // Causes error: Sequence contains no matching element (!?)
+            // .DependsOn(this.Build) // Causes error: Sequence contains no matching element (!?)
             .Executes(fun _ ->
                 Paths.testsProjects
                 |> Seq.iter (fun testProject ->

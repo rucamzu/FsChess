@@ -14,6 +14,18 @@
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"
+    },
+    {
+      "name": "Launch FsChess.Rest (HTTP)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/src/FsChess.Rest/FsChess.Rest.fsproj",
+      "serverReadyAction":{
+        "action": "openExternally",
+        "killOnServerStop": false,
+        "pattern": "\\bNow listening on:\\s+https://localhost:([0-9]+)",
+        "uriFormat": "%s/chess/games/new"
+      }
     }
   ]
 }
