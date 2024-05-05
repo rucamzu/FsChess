@@ -1,4 +1,4 @@
-module FsChess.App.Tests.ChessTests
+module FsChess.App.Tests.NewGameTests
 
 open Expecto
 
