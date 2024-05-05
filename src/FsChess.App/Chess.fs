@@ -181,16 +181,24 @@ module Square =
 module Board =
     let empty = Board Map.empty
 
+    /// Places a piece on a square of a given board. 
     let place piece atSquare = function
         | Board pieces -> pieces |> (Map.add atSquare piece) |> Board
 
+    /// Places a piece on many squares of a given board. 
     let placeMany piece squares board =
         squares
         |> Seq.fold (fun board' square-> place piece square board') board
 
+    /// Removes any piece on a square of a given board. 
+    let remove square = function
+        | Board pieces -> pieces |> Map.remove square |> Board
+
+    /// Returns the piece placed on a square of a given board.
     let getAt square = function
         | Board pieces -> pieces |> Map.tryFind square |> Option.get
 
+    /// Returns a list of all occupied squares together with the pieces placed in them.
     let getAll = function
         | Board pieces ->
             pieces
@@ -204,13 +212,15 @@ module Move =
     let piece = function
         | Move (piece, _, _) -> piece
 
-    let makeMove piece atSquare toSquare
-        = Move (piece, atSquare, toSquare)
+    let makeMove piece atSquare toSquare = Move (piece, atSquare, toSquare)
+
+    let isMove piece atSquare toSquare = function
+        | Move (piece', atSquare', toSquare') -> piece = piece' && atSquare = atSquare' && toSquare = toSquare'
 
 module Game =
 
-    let private noMovesPlayed = []
-    let private noMovesPlayable = []
+    let private noPlayedMoves = []
+    let private noPlayableMoves = []
 
     /// Returns the current board for a given game.
     let board = function Game (board, _, _) -> board
@@ -274,7 +284,16 @@ module Game =
             |> place Black King Squares.E8
             |> placeMany Black Pawn [ Squares.A7; Squares.B7; Squares.C7; Squares.D7; Squares.E7; Squares.F7; Squares.G7; Squares.H7 ]
 
-        Game (board, noMovesPlayed, Game (board, noMovesPlayed, noMovesPlayable) |> PlayableMoves.forGame)
+        Game (board, noPlayedMoves, Game (board, noPlayedMoves, noPlayableMoves) |> PlayableMoves.forGame)
+
+    let play move = function
+        Game (board, playedMoves, playableMoves) ->
+            match move with
+            | Move (piece, atSquare, toSquare) -> 
+                let board' = board |> Board.remove atSquare |> Board.place piece toSquare
+                let playedMoves' = playedMoves |> List.append [ move ]
+                let playableMoves' = Game (board', playedMoves', noPlayableMoves) |> PlayableMoves.forGame
+                Game (board', playedMoves', playableMoves')
 
 type Api = {
     NewGame : Game

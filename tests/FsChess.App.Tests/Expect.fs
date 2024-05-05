@@ -11,3 +11,7 @@ let equal expected message actual = Expecto.Expect.equal actual expected message
 let exists predicate message sequence = Expecto.Expect.exists sequence predicate message
 
 let isEmpty message actual = Expecto.Expect.isEmpty actual message
+
+let isFalse message actual = Expecto.Expect.isFalse actual message
+
+let isTrue message actual = Expecto.Expect.isTrue actual message
