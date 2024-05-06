@@ -246,7 +246,7 @@ module Game =
         let forPawn game colour atSquare =
             match colour with
             | White -> [ Move.makeMove Pieces.WhitePawn atSquare (Square.atNextRank atSquare) ]
-            | Black -> [ Move.makeMove Pieces.BlackPawn atSquare (Square.atNextRank atSquare) ]
+            | Black -> [ Move.makeMove Pieces.BlackPawn atSquare (Square.atPrevRank atSquare) ]
 
         /// Returns all the moves that can be played next with a given piece on a given game.
         let forPiece game piece atSquare =
@@ -291,7 +291,7 @@ module Game =
             match move with
             | Move (piece, atSquare, toSquare) -> 
                 let board' = board |> Board.remove atSquare |> Board.place piece toSquare
-                let playedMoves' = playedMoves |> List.append [ move ]
+                let playedMoves' = List.append playedMoves [ move ]
                 let playableMoves' = Game (board', playedMoves', noPlayableMoves) |> PlayableMoves.forGame
                 Game (board', playedMoves', playableMoves')
 
