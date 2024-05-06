@@ -15,7 +15,7 @@ type Game = {
     PlayableMoves : Map<string, Uri>
 }
 
-module private String =
+module String =
 
     let join (separator : string) (strings : string seq) =
         System.String.Join(separator, strings)
@@ -24,7 +24,7 @@ module private String =
         s.Split(separator)
 
 /// Functions to compute URL identifiers from games and moves.
-module Id =
+module GameId =
 
     /// Returns the id of a given game.
     let ofGame game =
@@ -32,12 +32,21 @@ module Id =
         | [] -> "new"
         | playedMoves -> playedMoves |> List.map annotateMove |> String.join "-"
 
+    let toGame api gameId =
+        let playMoveAnnotation game moveAnnotation =
+            let move = game |> Game.playableMoves |> Seq.find (fun move -> annotateMove move = moveAnnotation)
+            game |> Game.play move
+
+        gameId
+        |> String.split "-"
+        |> Seq.fold playMoveAnnotation api.NewGame
+
 /// Functions to compute URLs of games and playable moves.
 module URL =
 
     /// Returns the root URL of a given game.
     let ofGame baseUrl game =
-        Uri(baseUrl, $"/chess/games/{Id.ofGame game}")
+        Uri(baseUrl, $"/chess/games/{GameId.ofGame game}")
 
 /// Functions to build data transfer objects that will be returned as part of HTTP responses.
 module DTO =
@@ -61,17 +70,6 @@ module DTO =
         PlayableMoves = game |> buildPlayableMoves
     }
 
-module Parse =
-
-    let game api gameId =
-        let playMoveAnnotation game moveAnnotation =
-            let move = game |> Game.playableMoves |> Seq.find (fun move -> annotateMove move = moveAnnotation)
-            game |> Game.play move
-
-        gameId
-        |> String.split "-"
-        |> Seq.fold playMoveAnnotation api.NewGame
-
 module Handle =
 
     let newGame api : HttpHandler =
@@ -81,7 +79,7 @@ module Handle =
 
     let getGame api (gameId : string) : HttpHandler =
         gameId
-        |> Parse.game api
+        |> GameId.toGame api
         |> DTO.buildGame
         |> json
 
