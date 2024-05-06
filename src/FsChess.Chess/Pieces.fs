@@ -1,19 +1,19 @@
-namespace FsChess.App
+namespace FsChess.Chess
 
 open FsChess.Common.Functions
-open FsChess.Common.Tuples
 
-/// Piece shapes on a game of chess.
+/// Piece shapes in a game of chess.
 type Chessman = Pawn | Knight | Bishop | Rook | Queen | King
 
-/// Piece colours on a game of chess.
+/// Piece colours in a game of chess.
 type Colour = White | Black
 
-/// A piece of a specific colour.
+/// Coloured pieces in a game of chess.
 type Piece = private Piece of Colour * Chessman
     with override this.ToString() = match this with Piece (colour, chessman) -> $"{colour} {chessman}"
 
-/// All the pieces on a game of chess.
+/// All the different pieces used in a game of chess.
+[<RequireQualifiedAccess>]
 module Pieces =
 
     let private make = curry Piece
@@ -32,6 +32,7 @@ module Pieces =
     let BlackPawn = make Black Pawn
 
 /// Functions to query chess pieces.
+[<RequireQualifiedAccess>]
 module Piece =
 
     let internal make = curry Piece

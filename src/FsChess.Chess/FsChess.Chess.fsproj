@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Pieces.fs" />
     <Compile Include="Chess.fs" />
     <Compile Include="ChessNotation.fs" />
   </ItemGroup>

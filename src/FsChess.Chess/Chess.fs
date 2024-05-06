@@ -3,13 +3,6 @@ module FsChess.Chess.Chess
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
-type Chessman = Pawn | Knight | Bishop | Rook | Queen | King
-
-type Colour = White | Black
-
-type Piece = private Piece of Colour * Chessman
-    with override this.ToString() = match this with Piece (colour, chessman) -> $"{colour} {chessman}"
-
 type File = A | B | C | D | E | F | G | H
 
 type Rank = private Rank of int
@@ -24,38 +17,6 @@ type Move =
     | Move of Piece * Square * Square
 
 type Game = private Game of Board * Move list * Move list
-
-/// Pieces on a chess game.
-module Pieces =
-
-    let private make = curry Piece
-
-    let WhiteKing = make White King
-    let WhiteQueen = make White Queen
-    let WhiteRook = make White Rook
-    let WhiteBishop = make White Bishop
-    let WhiteKnight = make White Knight
-    let WhitePawn = make White Pawn
-    let BlackKing = make Black King
-    let BlackQueen = make Black Queen
-    let BlackRook = make Black Rook
-    let BlackBishop = make Black Bishop
-    let BlackKnight = make Black Knight
-    let BlackPawn = make Black Pawn
-
-/// Functions to query chess pieces.
-module Piece =
-
-    let internal make = curry Piece
-
-    /// Returns the colour of a given chess piece.
-    let colour = function Piece (colour, _) -> colour
-
-    /// Returns the shape of a given chess piece.
-    let chessman = function Piece (_, chessman) -> chessman
-
-    /// Returns whether a given piece is of a given colour.
-    let ofColour colour = function Piece (colour', _) -> colour = colour'
 
 /// Files of a chess board, indexed from A to H.
 module Files =
