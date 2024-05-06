@@ -3,7 +3,6 @@ module FsChess.Chess.Tests.MoveTests
 open Expecto
 
 open FsChess.Chess
-open FsChess.Chess.Chess
 open FsChess.Chess.Tests
 
 [<Tests>]

@@ -3,7 +3,6 @@ module FsChess.Chess.Tests.ChessNotationTests
 open Expecto
 
 open FsChess.Chess
-open FsChess.Chess.Chess
 open FsChess.Chess.ChessNotation
 open FsChess.Chess.Tests
 

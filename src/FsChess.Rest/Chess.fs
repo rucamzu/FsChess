@@ -5,7 +5,6 @@ open System
 open Giraffe
 
 open FsChess.Chess
-open FsChess.Chess.Chess
 open FsChess.Chess.ChessNotation
 open FsChess.App
 open FsChess.Common
@@ -59,7 +58,7 @@ module DTO =
         |> Seq.map (fun move -> (annotateMove move, game |> Game.play move |> URL.ofGame baseUrl))
         |> Map.ofSeq
 
-    let buildGame (game : FsChess.Chess.Chess.Game) : Game = {
+    let buildGame (game : FsChess.Chess.Game) : Game = {
         Board = game |> buildBoard
         PlayedMoves = game |> buildPlayedMoves
         PlayableMoves = game |> buildPlayableMoves

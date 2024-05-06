@@ -1,6 +1,6 @@
 namespace FsChess.App
 
-open FsChess.Chess.Chess
+open FsChess.Chess
 
 type Api = {
     NewGame : Game

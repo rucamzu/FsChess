@@ -1,14 +1,17 @@
-module FsChess.Chess.Chess
+namespace FsChess.Chess
 
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
+/// A move on a game of chess.
 type Move =
     | Move of Piece * Square * Square
 
+/// A game of chess.
 type Game = private Game of Board * Move list * Move list
 
-/// Functions to query and manipulate moves on a chess game .
+/// Functions to query and manipulate moves on a game of chess.
+[<RequireQualifiedAccess>]
 module Move =
 
     /// Returns the moved chess piece.
@@ -20,6 +23,8 @@ module Move =
     let isMove piece atSquare toSquare = function
         | Move (piece', atSquare', toSquare') -> piece = piece' && atSquare = atSquare' && toSquare = toSquare'
 
+/// Functions to query and manipulate games of chess.
+[<RequireQualifiedAccess>]
 module Game =
 
     let private noPlayedMoves = []

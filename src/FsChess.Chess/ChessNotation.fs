@@ -2,7 +2,7 @@
 /// See https://en.wikipedia.org/wiki/Algebraic_notation_(chess).
 module FsChess.Chess.ChessNotation
 
-open FsChess.Chess.Chess
+open FsChess.Chess
 
 let annotatePiece piece =
     match (Piece.colour piece, Piece.chessman piece) with
