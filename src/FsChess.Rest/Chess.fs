@@ -63,7 +63,7 @@ module DTO =
         PlayableMoves = game |> buildPlayableMoves
     }
 
-module Handle =
+module RestApi =
 
     let newGame api : HttpHandler =
         api.NewGame
@@ -78,8 +78,8 @@ module Handle =
 
 let webapi (api : FsChess.App.Chess.Api) : HttpHandler =
     choose [
-        route "/chess/games/new" >=> Handle.newGame api
-        routef "/chess/games/%s" <| Handle.getGame api
+        route "/chess/games/new" >=> RestApi.newGame api
+        routef "/chess/games/%s" <| RestApi.getGame api
 
         RequestErrors.NOT_FOUND "Not found"
     ]
