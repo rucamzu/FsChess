@@ -2,13 +2,13 @@ namespace FsChess.Chess
 
 open FsChess.Common.Functions
 
-/// Piece shapes in a game of chess.
+/// A piece shape in a game of chess.
 type Chessman = Pawn | Knight | Bishop | Rook | Queen | King
 
-/// Piece colours in a game of chess.
+/// A piece colour in a game of chess.
 type Colour = White | Black
 
-/// Coloured pieces in a game of chess.
+/// A coloured piece in a game of chess.
 type Piece = private Piece of Colour * Chessman
     with override this.ToString() = match this with Piece (colour, chessman) -> $"{colour} {chessman}"
 
