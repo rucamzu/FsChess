@@ -6,6 +6,7 @@ open Giraffe
 
 open FsChess.App.Chess
 open FsChess.App.ChessNotation
+open FsChess.Common
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
@@ -14,14 +15,6 @@ type Game = {
     PlayedMoves : string list
     PlayableMoves : Map<string, Uri>
 }
-
-module String =
-
-    let join (separator : string) (strings : string seq) =
-        System.String.Join(separator, strings)
-
-    let split (separator : string) (s : string) =
-        s.Split(separator)
 
 /// Functions to compute URL identifiers from games and moves.
 module GameId =
