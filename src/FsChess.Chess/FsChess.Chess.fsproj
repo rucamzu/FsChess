@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Pieces.fs" />
     <Compile Include="Squares.fs" />
+    <Compile Include="Board.fs" />
     <Compile Include="Chess.fs" />
     <Compile Include="ChessNotation.fs" />
   </ItemGroup>

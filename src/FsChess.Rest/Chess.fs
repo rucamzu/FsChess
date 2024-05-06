@@ -4,6 +4,7 @@ open System
 
 open Giraffe
 
+open FsChess.Chess
 open FsChess.Chess.Chess
 open FsChess.Chess.ChessNotation
 open FsChess.App

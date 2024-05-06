@@ -3,40 +3,10 @@ module FsChess.Chess.Chess
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
-type Board = private Board of Map<Square, Piece>
-
 type Move =
     | Move of Piece * Square * Square
 
 type Game = private Game of Board * Move list * Move list
-
-/// Functions to query and manipulate a chess board.
-module Board =
-    let empty = Board Map.empty
-
-    /// Places a piece on a square of a given board. 
-    let place piece atSquare = function
-        | Board pieces -> pieces |> (Map.add atSquare piece) |> Board
-
-    /// Places a piece on many squares of a given board. 
-    let placeMany piece squares board =
-        squares
-        |> Seq.fold (fun board' square-> place piece square board') board
-
-    /// Removes any piece on a square of a given board. 
-    let remove square = function
-        | Board pieces -> pieces |> Map.remove square |> Board
-
-    /// Returns the piece placed on a square of a given board.
-    let getAt square = function
-        | Board pieces -> pieces |> Map.tryFind square |> Option.get
-
-    /// Returns a list of all occupied squares together with the pieces placed in them.
-    let getAll = function
-        | Board pieces ->
-            pieces
-            |> Map.toSeq
-            |> Seq.sortBy (fun (square, _) -> square)
 
 /// Functions to query and manipulate moves on a chess game .
 module Move =
