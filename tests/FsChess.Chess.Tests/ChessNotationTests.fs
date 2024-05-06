@@ -1,10 +1,10 @@
-module FsChess.App.Tests.ChessNotationTests
+module FsChess.Chess.Tests.ChessNotationTests
 
 open Expecto
 
-open FsChess.App.Chess
-open FsChess.App.ChessNotation
-open FsChess.App.Tests
+open FsChess.Chess.Chess
+open FsChess.Chess.ChessNotation
+open FsChess.Chess.Tests
 
 [<Tests>]
 let algebraicNotationTests =

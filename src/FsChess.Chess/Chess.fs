@@ -1,4 +1,4 @@
-module FsChess.App.Chess
+module FsChess.Chess.Chess
 
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
@@ -294,12 +294,3 @@ module Game =
                 let playedMoves' = List.append playedMoves [ move ]
                 let playableMoves' = Game (board', playedMoves', noPlayableMoves) |> PlayableMoves.forGame
                 Game (board', playedMoves', playableMoves')
-
-type Api = {
-    NewGame : Game
-}
-
-module Api =
-    let api : Api = {
-        NewGame = Game.newGame
-    }

@@ -1,8 +1,8 @@
 /// Functions to describe chess pieces and moves in algebraic notation.
 /// See https://en.wikipedia.org/wiki/Algebraic_notation_(chess).
-module FsChess.App.ChessNotation
+module FsChess.Chess.ChessNotation
 
-open FsChess.App.Chess
+open FsChess.Chess.Chess
 
 let annotatePiece piece =
     match (Piece.colour piece, Piece.chessman piece) with

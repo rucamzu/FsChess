@@ -22,7 +22,7 @@ let main args =
     // app.UseHttpsRedirection()
     // app.UseAuthorization()
     // app.MapControllers()
-    app.UseGiraffe <| Chess.webapi Chess.Api.api
+    app.UseGiraffe <| Chess.webapi FsChess.App.Api.api
 
     app.Run()
 

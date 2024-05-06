@@ -1,9 +1,9 @@
-module FsChess.App.Tests.NewGameTests
+module FsChess.Chess.Tests.NewGameTests
 
 open Expecto
 
-open FsChess.App.Chess
-open FsChess.App.Tests
+open FsChess.Chess.Chess
+open FsChess.Chess.Tests
 
 [<Tests>]
 let newGameTests =

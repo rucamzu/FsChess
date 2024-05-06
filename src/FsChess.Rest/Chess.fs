@@ -4,8 +4,9 @@ open System
 
 open Giraffe
 
-open FsChess.App.Chess
-open FsChess.App.ChessNotation
+open FsChess.Chess.Chess
+open FsChess.Chess.ChessNotation
+open FsChess.App
 open FsChess.Common
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
@@ -25,7 +26,7 @@ module GameId =
         | [] -> "new"
         | playedMoves -> playedMoves |> List.map annotateMove |> String.join "-"
 
-    let toGame api gameId =
+    let toGame (api : FsChess.App.Api) gameId =
         let playMoveAnnotation game moveAnnotation =
             let move = game |> Game.playableMoves |> Seq.find (fun move -> annotateMove move = moveAnnotation)
             game |> Game.play move
@@ -57,7 +58,7 @@ module DTO =
         |> Seq.map (fun move -> (annotateMove move, game |> Game.play move |> URL.ofGame baseUrl))
         |> Map.ofSeq
 
-    let buildGame (game : FsChess.App.Chess.Game) : Game = {
+    let buildGame (game : FsChess.Chess.Chess.Game) : Game = {
         Board = game |> buildBoard
         PlayedMoves = game |> buildPlayedMoves
         PlayableMoves = game |> buildPlayableMoves
@@ -76,7 +77,7 @@ module RestApi =
         |> DTO.buildGame
         |> json
 
-let webapi (api : FsChess.App.Chess.Api) : HttpHandler =
+let webapi (api : FsChess.App.Api) : HttpHandler =
     choose [
         route "/chess/games/new" >=> RestApi.newGame api
         routef "/chess/games/%s" <| RestApi.getGame api

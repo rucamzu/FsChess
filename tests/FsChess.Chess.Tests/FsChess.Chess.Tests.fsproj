@@ -13,7 +13,7 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FsChess.App\FsChess.App.fsproj" />
+    <ProjectReference Include="..\..\src\FsChess.Chess\FsChess.Chess.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -15,7 +15,7 @@ let getTestHost () =
         .ConfigureServices(fun services ->
             services.AddGiraffe() |> ignore)
         .Configure(fun app ->
-            app.UseGiraffe <| Chess.webapi Chess.Api.api)
+            app.UseGiraffe <| Chess.webapi FsChess.App.Api.api)
 
 let get (endpoint : string) =
     task {
