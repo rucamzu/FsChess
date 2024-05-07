@@ -20,6 +20,7 @@ let moveTests =
                 game'
                 |> Game.board
                 |> Board.getAt toSquare
+                |> Option.get
                 |> Expect.equal piece $"{piece} is not at {toSquare} after {move}"
             })
 

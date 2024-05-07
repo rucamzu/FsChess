@@ -25,7 +25,7 @@ module Board =
 
     /// Returns the piece placed on a square of a given board.
     let getAt square = function
-        | Board pieces -> pieces |> Map.tryFind square |> Option.get
+        | Board pieces -> pieces |> Map.tryFind square
 
     /// Returns a list of all occupied squares together with the pieces placed in them.
     let getAll = function

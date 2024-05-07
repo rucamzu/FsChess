@@ -28,6 +28,7 @@ let newGameTests =
                 Game.newGame
                 |> Game.board
                 |> Board.getAt square
+                |> Option.get
                 |> Expect.equal piece $"New game does not have {piece} initially placed at {square}"
             })
 

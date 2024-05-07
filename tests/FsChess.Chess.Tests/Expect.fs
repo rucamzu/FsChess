@@ -14,4 +14,8 @@ let isEmpty message actual = Expecto.Expect.isEmpty actual message
 
 let isFalse message actual = Expecto.Expect.isFalse actual message
 
+let isNone message actual = Expecto.Expect.isNone actual message
+
+let isSome message actual = Expecto.Expect.isSome actual message
+
 let isTrue message actual = Expecto.Expect.isTrue actual message

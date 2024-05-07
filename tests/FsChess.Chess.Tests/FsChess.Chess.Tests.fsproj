@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Expect.fs" />
+    <Compile Include="BoardTests.fs" />
     <Compile Include="NewGameTests.fs" />
     <Compile Include="MoveTests.fs" />
     <Compile Include="ChessNotationTests.fs" />
