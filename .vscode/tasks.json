@@ -3,11 +3,16 @@
   "tasks": [
     {
       "label": "Build",
-      "detail": "Build FsChess for testing",
+      "detail": "Build FsChess solution",
       "type": "process",
-      "group": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "command": "dotnet",
-      "args": ["nuke", "build"],
+      "args": [
+        "build"
+      ],
       "echoCommand": true,
       "presentation": {
         "echo": true,
@@ -24,6 +29,31 @@
         "instanceLimit": 1,
         "reevaluateOnRerun": true,
         "runOn": "default"
+      },
+      "isBuildCommand": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build (NUKE)",
+      "detail": "Build FsChess for testing",
+      "type": "process",
+      "group": "build",
+      "command": "dotnet",
+      "args": [
+        "nuke",
+        "build"
+      ],
+      "echoCommand": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
       }
     },
     {
@@ -32,7 +62,10 @@
       "type": "process",
       "group": "test",
       "command": "dotnet",
-      "args": ["nuke", "test"],
+      "args": [
+        "nuke",
+        "test"
+      ],
       "echoCommand": true,
       "presentation": {
         "echo": true,
@@ -57,7 +90,11 @@
       "type": "process",
       "group": "build",
       "command": "dotnet",
-      "args": ["build", "--configuration", "Debug"],
+      "args": [
+        "build",
+        "--configuration",
+        "Debug"
+      ],
       "echoCommand": true,
       "presentation": {
         "echo": true,
@@ -75,6 +112,6 @@
         "reevaluateOnRerun": true,
         "runOn": "default"
       }
-    },
+    }
   ]
 }
