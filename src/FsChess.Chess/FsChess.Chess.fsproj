@@ -10,7 +10,7 @@
     <Compile Include="Squares.fs" />
     <Compile Include="Board.fs" />
     <Compile Include="Game.fs" />
-    <Compile Include="ChessNotation.fs" />
+    <Compile Include="Notation.fs" />
   </ItemGroup>
 
   <ItemGroup>

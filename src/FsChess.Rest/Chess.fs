@@ -5,7 +5,6 @@ open System
 open Giraffe
 
 open FsChess.Chess
-open FsChess.Chess.ChessNotation
 open FsChess.App
 open FsChess.Common
 open FsChess.Common.Functions
@@ -24,11 +23,11 @@ module GameId =
     let ofGame game =
         match Game.playedMoves game with
         | [] -> "new"
-        | playedMoves -> playedMoves |> List.map annotateMove |> String.join "-"
+        | playedMoves -> playedMoves |> List.map Notation.annotateMove |> String.join "-"
 
     let toGame (api : FsChess.App.Api) gameId =
         let playMoveAnnotation game moveAnnotation =
-            let move = game |> Game.playableMoves |> Seq.find (fun move -> annotateMove move = moveAnnotation)
+            let move = game |> Game.playableMoves |> Seq.find (fun move -> Notation.annotateMove move = moveAnnotation)
             game |> Game.play move
 
         gameId
@@ -46,16 +45,16 @@ module URL =
 module DTO =
 
     let buildBoard =
-        Game.board >> Board.getAll >> Seq.map (flip >> uncurry2 annotatePlayedPiece) >> Seq.toList
+        Game.board >> Board.getAll >> Seq.map (flip >> uncurry2 Notation.annotatePlayedPiece) >> Seq.toList
 
     let buildPlayedMoves =
-        Game.playedMoves >> List.map annotateMove
+        Game.playedMoves >> List.map Notation.annotateMove
 
     let buildPlayableMoves game =
         let baseUrl = Uri("http://localhost:5064") // TODO: hardcoded base URL
         game
         |> Game.playableMoves
-        |> Seq.map (fun move -> (annotateMove move, game |> Game.play move |> URL.ofGame baseUrl))
+        |> Seq.map (fun move -> (Notation.annotateMove move, game |> Game.play move |> URL.ofGame baseUrl))
         |> Map.ofSeq
 
     let buildGame (game : FsChess.Chess.Game) : Game = {
