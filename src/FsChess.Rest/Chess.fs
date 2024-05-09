@@ -6,33 +6,14 @@ open Giraffe
 
 open FsChess.Chess
 open FsChess.App
-open FsChess.Common
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
-type Game = {
+type GameDTO = {
     Board : string list
     PlayedMoves : string list
     PlayableMoves : Map<string, Uri>
 }
-
-/// Functions to compute URL identifiers from games and moves.
-module GameId =
-
-    /// Returns the id of a given game.
-    let ofGame game =
-        match Game.playedMoves game with
-        | [] -> "new"
-        | playedMoves -> playedMoves |> List.map (Notation.annotateMove Notation.pieceSymbol) |> String.join "-"
-
-    let toGame (api : FsChess.App.Api) gameId =
-        let playMoveAnnotation game moveAnnotation =
-            let move = game |> Game.playableMoves |> Seq.find (Notation.annotateMove Notation.pieceSymbol >> (=) moveAnnotation)
-            game |> Game.play move
-
-        gameId
-        |> String.split "-"
-        |> Seq.fold playMoveAnnotation api.NewGame
 
 /// Functions to compute URLs of games and playable moves.
 module URL =
@@ -57,7 +38,7 @@ module DTO =
         |> Seq.map (fun move -> (Notation.annotateMove Notation.pieceSymbol move, game |> Game.play move |> URL.ofGame baseUrl))
         |> Map.ofSeq
 
-    let buildGame (game : FsChess.Chess.Game) : Game = {
+    let buildGame game : GameDTO = {
         Board = game |> buildBoard
         PlayedMoves = game |> buildPlayedMoves
         PlayableMoves = game |> buildPlayableMoves
@@ -72,7 +53,8 @@ module RestApi =
 
     let getGame api (gameId : string) : HttpHandler =
         gameId
-        |> GameId.toGame api
+        |> api.MakeGameId
+        |> api.GetGame
         |> DTO.buildGame
         |> json
 
