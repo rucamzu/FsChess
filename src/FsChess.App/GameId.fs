@@ -5,7 +5,13 @@ open FsChess.Chess
 
 type GameId =
     | NewGameId
-    | GameId of string
+    | GameId of id:string
+with
+    override this.ToString() =
+        match this with
+        | NewGameId -> "new"
+        | GameId id -> id
+
 
 /// Functions to convert between chess games and game identifiers.
 /// TODO: generate and parse game identifiers without move separators.
