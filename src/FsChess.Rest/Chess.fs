@@ -23,11 +23,11 @@ module GameId =
     let ofGame game =
         match Game.playedMoves game with
         | [] -> "new"
-        | playedMoves -> playedMoves |> List.map Notation.annotateMove |> String.join "-"
+        | playedMoves -> playedMoves |> List.map (Notation.annotateMove Notation.pieceSymbol) |> String.join "-"
 
     let toGame (api : FsChess.App.Api) gameId =
         let playMoveAnnotation game moveAnnotation =
-            let move = game |> Game.playableMoves |> Seq.find (fun move -> Notation.annotateMove move = moveAnnotation)
+            let move = game |> Game.playableMoves |> Seq.find (Notation.annotateMove Notation.pieceSymbol >> (=) moveAnnotation)
             game |> Game.play move
 
         gameId
@@ -48,13 +48,13 @@ module DTO =
         Game.board >> Board.getAll >> Seq.map (flip >> uncurry2 Notation.annotatePlayedPiece) >> Seq.toList
 
     let buildPlayedMoves =
-        Game.playedMoves >> List.map Notation.annotateMove
+        Game.playedMoves >> List.map (Notation.annotateMove Notation.pieceSymbol)
 
     let buildPlayableMoves game =
         let baseUrl = Uri("http://localhost:5064") // TODO: hardcoded base URL
         game
         |> Game.playableMoves
-        |> Seq.map (fun move -> (Notation.annotateMove move, game |> Game.play move |> URL.ofGame baseUrl))
+        |> Seq.map (fun move -> (Notation.annotateMove Notation.pieceSymbol move, game |> Game.play move |> URL.ofGame baseUrl))
         |> Map.ofSeq
 
     let buildGame (game : FsChess.Chess.Game) : Game = {

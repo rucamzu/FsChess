@@ -25,7 +25,7 @@ let algebraicNotationTests =
         ]
         |> List.map (fun (piece, symbol) ->
             test $"represents {piece} with symbol '{symbol}'" {
-                Notation.annotatePiece piece
+                Notation.pieceSymbol piece
                 |> Expect.equal symbol $"{piece} is not represented with symbol '{symbol}'"
             })
 
@@ -42,12 +42,13 @@ let algebraicNotationTests =
             })
 
         [
-            Pieces.WhitePawn, Squares.B2, Squares.B3, "♙b3"
+            Pieces.WhitePawn, Squares.B2, Squares.B3, "b3"
+            Pieces.BlackBishop, Squares.C8, Squares.D7, "♗d7"
         ]
         |> List.map (fun (piece, atSquare, toSquare, annotation) ->
             test $"annotates moving {piece} at {atSquare} to {toSquare} as '{annotation}'" {
                 Move.makeMove piece atSquare toSquare
-                |> Notation.annotateMove
+                |> Notation.annotateMove Notation.pieceSymbol
                 |> Expect.equal annotation $"Moving {piece} at {atSquare} to {toSquare} is not annotated as '{annotation}'"
             })
 

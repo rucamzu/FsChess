@@ -7,7 +7,10 @@ open FsChess.Chess
 [<RequireQualifiedAccess>]
 module Notation =
 
-    let annotatePiece piece =
+    type PieceNotation = Piece -> string
+
+    /// Returns the symbol that represents a piece.
+    let pieceSymbol piece =
         match (Piece.colour piece, Piece.chessman piece) with
         | White, King -> "♔"
         | White, Queen -> "♕"
@@ -22,8 +25,21 @@ module Notation =
         | Black, Knight -> "♘"
         | Black, Pawn -> "♙"
 
-    let annotatePlayedPiece piece atSquare =
-        $"{annotatePiece piece}{atSquare.ToString().ToLowerInvariant()}"
+    /// Returns the letter that represents a piece.
+    let pieceLetter piece =
+        match Piece.chessman piece with
+        | King -> "K"
+        | Queen -> "Q"
+        | Rook -> "R"
+        | Bishop -> "B"
+        | Knight -> "N"
+        | Pawn -> ""
 
-    let annotateMove = function
-        | Move (piece, atSquare, toSquare) -> $"{annotatePiece piece}{toSquare.ToString().ToLowerInvariant()}"
+    let annotatePlayedPiece piece atSquare =
+        $"{pieceSymbol piece}{atSquare.ToString().ToLowerInvariant()}"
+
+    let annotateMove (annotatePiece : PieceNotation) = function
+        | Move (piece, _, toSquare) ->
+            match Piece.chessman piece with
+            | Pawn -> $"{toSquare.ToString().ToLowerInvariant()}"
+            | _ -> $"{annotatePiece piece}{toSquare.ToString().ToLowerInvariant()}"
