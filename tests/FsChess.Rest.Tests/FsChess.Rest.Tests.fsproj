@@ -11,6 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FsChess.Rest\FsChess.Rest.fsproj" />
+    <ProjectReference Include="..\FsChess.Test.Common\FsChess.Test.Common.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

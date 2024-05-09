@@ -3,7 +3,7 @@ module FsChess.Chess.Tests.ChessNotationTests
 open Expecto
 
 open FsChess.Chess
-open FsChess.Chess.Tests
+open FsChess.Test.Common
 
 [<Tests>]
 let algebraicNotationTests =

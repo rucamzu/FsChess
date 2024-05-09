@@ -6,7 +6,6 @@
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Expect.fs" />
     <Compile Include="BoardTests.fs" />
     <Compile Include="NewGameTests.fs" />
     <Compile Include="MoveTests.fs" />
@@ -15,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FsChess.Chess\FsChess.Chess.fsproj" />
+    <ProjectReference Include="..\FsChess.Test.Common\FsChess.Test.Common.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

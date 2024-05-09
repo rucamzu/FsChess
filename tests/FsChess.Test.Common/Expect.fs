@@ -1,4 +1,5 @@
-module FsChess.Chess.Tests.Expect
+[<RequireQualifiedAccess>]
+module FsChess.Test.Common.Expect
 
 open Expecto
 
