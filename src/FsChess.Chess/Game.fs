@@ -52,9 +52,11 @@ module Game =
 
         /// Returns all the moves that can be played next with a given pawn on a given game.
         let forPawn game colour atSquare =
-            match colour with
-            | White -> [ Move.makeMove Pieces.WhitePawn atSquare (Square.atNextRank atSquare) ]
-            | Black -> [ Move.makeMove Pieces.BlackPawn atSquare (Square.atPrevRank atSquare) ]
+            match colour, Square.rank atSquare with
+            | White, rank when rank = Ranks._2 -> [ Move.makeMove Pieces.WhitePawn atSquare (atSquare |> Square.atNextRank); Move.makeMove Pieces.WhitePawn atSquare (atSquare |> Square.atNextRank |> Square.atNextRank) ]
+            | White, _ -> [ Move.makeMove Pieces.WhitePawn atSquare (atSquare |> Square.atNextRank) ]
+            | Black, rank when rank = Ranks._7 -> [ Move.makeMove Pieces.BlackPawn atSquare (atSquare |> Square.atPrevRank); Move.makeMove Pieces.BlackPawn atSquare (atSquare |> Square.atPrevRank |> Square.atPrevRank) ]
+            | Black, _ -> [ Move.makeMove Pieces.BlackPawn atSquare (atSquare |> Square.atPrevRank) ]
 
         /// Returns all the moves that can be played next with a given piece on a given game.
         let forPiece game piece atSquare =

@@ -8,7 +8,7 @@
   <ItemGroup>
     <Compile Include="BoardTests.fs" />
     <Compile Include="NewGameTests.fs" />
-    <Compile Include="MoveTests.fs" />
+    <Compile Include="GameTests.fs" />
     <Compile Include="NotationTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
