@@ -25,11 +25,22 @@ let get (endpoint : string) =
     }
 
 [<Tests>]
-let newGameTests =
-    testList "/chess/games/new" [
-        testCaseTask "returns initial game" <| fun _ ->
+let getNewGameTests =
+    testList "GET request to /chess/games/new" [
+        testCaseTask "succeeds to return a game" <| fun _ ->
             task {
                 let! response = get "/chess/games/new"
+                Expect.equal response.StatusCode HttpStatusCode.OK ""
+            }
+    ]
+
+
+[<Tests>]
+let getGameTests =
+    testList "GET request to /chess/games/[moves]" [
+        testCaseTask "succeeds to return a game" <|  fun _ ->
+            task {
+                let! response = get "/chess/games/e4/e5"
                 Expect.equal response.StatusCode HttpStatusCode.OK ""
             }
     ]

@@ -6,6 +6,7 @@ open Giraffe
 
 open FsChess.Chess
 open FsChess.App
+open FsChess.Common
 open FsChess.Common.Functions
 open FsChess.Common.Tuples
 
@@ -46,22 +47,32 @@ module DTO =
 
 module RestApi =
 
+    /// Returns a new chess game.
     let newGame api : HttpHandler =
         api.NewGame
         |> DTO.buildGame
         |> json
 
-    let getGame api (gameId : string) : HttpHandler =
-        gameId
-        |> api.MakeGameId
-        |> api.GetGame
+    let rec private playMoves api game moves =
+        match moves with
+        | nextMove :: remainingMoves -> playMoves api (api.PlayMove nextMove game) remainingMoves
+        | [] -> game
+
+    /// Returns the chess corresponding to the sequence of moves encoded in the relative path
+    let getGame api moves : HttpHandler =
+        moves
+        |> Seq.skip 1
+        |> Seq.toList
+        |> playMoves api api.NewGame
         |> DTO.buildGame
         |> json
 
 let webapi (api : FsChess.App.Api) : HttpHandler =
     choose [
-        route "/chess/games/new" >=> RestApi.newGame api
-        routef "/chess/games/%s" <| RestApi.getGame api
+        subRouteCi "/chess/games" <| choose [
+            routeCi "/new" >=> RestApi.newGame api
+            routexp "/(.*)/(.*)" <| RestApi.getGame api
+        ]
 
         RequestErrors.NOT_FOUND "Not found"
     ]
