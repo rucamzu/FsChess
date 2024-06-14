@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="GameId.fs" />
     <Compile Include="Api.fs" />
   </ItemGroup>
 
