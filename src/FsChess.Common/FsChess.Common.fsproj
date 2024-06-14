@@ -10,6 +10,7 @@
     <Compile Include="Tuples.fs" />
     <Compile Include="String.fs" />
     <Compile Include="Regex.fs" />
+    <Compile Include="Uri.fs" />
   </ItemGroup>
 
 </Project>

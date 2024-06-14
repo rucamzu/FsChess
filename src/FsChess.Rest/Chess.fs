@@ -16,17 +16,19 @@ type GameDTO = {
     PlayableMoves : Map<string, Uri>
 }
 
-/// Functions to compute URLs of games and playable moves.
+/// Functions to build URLs associated to chess games.
 module URL =
 
-    /// Returns the root URL of a given game.
-    let ofGame baseUrl game =
-        let gamePath =
-            game
-            |> Game.playedMoves
-            |> Seq.map (Notation.annotateMove Notation.pieceLetter)
-            |> String.join "/"
-        Uri(baseUrl, $"/chess/games/{gamePath}")
+    /// Returns the URL associated to a given game.
+    let ofGame baseUrl = function
+        | Game.NewGame _ -> Uri(baseUrl, $"/chess/games/new")
+        | game ->
+            let gamePath =
+                game
+                |> Game.playedMoves
+                |> Seq.map (Notation.annotateMove Notation.pieceLetter)
+                |> String.join "/"
+            Uri(baseUrl, $"/chess/games/{gamePath}")
 
 /// Functions to build data transfer objects that will be returned as part of HTTP responses.
 module DTO =
@@ -50,7 +52,8 @@ module DTO =
         PlayableMoves = game |> buildPlayableMoves
     }
 
-module RestApi =
+/// Types and functions that make up the web API.
+module WebApi =
 
     /// Returns a new chess game.
     let newGame api : HttpHandler =
@@ -63,7 +66,7 @@ module RestApi =
         | nextMove :: remainingMoves -> playMoves api (api.PlayMove nextMove game) remainingMoves
         | [] -> game
 
-    /// Returns the chess corresponding to the sequence of moves encoded in the relative path
+    /// Returns the chess game corresponding to the sequence of moves encoded in the relative path
     let getGame api moves : HttpHandler =
         moves
         |> Seq.toList
@@ -74,8 +77,8 @@ module RestApi =
 let webapi (api : FsChess.App.Api) : HttpHandler =
     choose [
         subRouteCi "/chess/games/" <| choose [
-            routeCi "new" >=> RestApi.newGame api
-            routexpn "[KBRQK]?[a-h][1-8]" <| RestApi.getGame api
+            routeCi "new" >=> WebApi.newGame api
+            routexpn "[KBRQK]?[a-h][1-8]" <| WebApi.getGame api
         ]
 
         RequestErrors.NOT_FOUND "Not found"

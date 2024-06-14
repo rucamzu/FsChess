@@ -96,6 +96,10 @@ module Game =
 
         Game (board, noPlayedMoves, Game (board, noPlayedMoves, noPlayableMoves) |> PlayableMoves.forGame)
 
+    let (|NewGame|_|) = function
+        | game when game = newGame -> Some game
+        | _ -> None
+
     let play move = function
         Game (board, playedMoves, playableMoves) ->
             match move with
