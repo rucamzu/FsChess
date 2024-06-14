@@ -13,4 +13,5 @@ nuget Expecto.Hopac
 nuget Logary.Adapters.Facade
 nuget Microsoft.AspNetCore.TestHost
 nuget Microsoft.NET.Test.Sdk
+nuget Moq
 nuget YoloDev.Expecto.TestSdk

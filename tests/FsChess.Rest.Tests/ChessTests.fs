@@ -34,10 +34,10 @@ let getNewGameTests =
             }
     ]
 
-
 [<Tests>]
 let getGameTests =
     testList "GET request to /chess/games/[moves]" [
+        // TODO: parameterise this test
         testCaseTask "succeeds to return a game" <|  fun _ ->
             task {
                 let! response = get "/chess/games/e4/e5"

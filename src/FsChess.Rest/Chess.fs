@@ -21,7 +21,12 @@ module URL =
 
     /// Returns the root URL of a given game.
     let ofGame baseUrl game =
-        Uri(baseUrl, $"/chess/games/{GameId.ofGame game}")
+        let gamePath =
+            game
+            |> Game.playedMoves
+            |> Seq.map (Notation.annotateMove Notation.pieceLetter)
+            |> String.join "/"
+        Uri(baseUrl, $"/chess/games/{gamePath}")
 
 /// Functions to build data transfer objects that will be returned as part of HTTP responses.
 module DTO =
@@ -61,7 +66,6 @@ module RestApi =
     /// Returns the chess corresponding to the sequence of moves encoded in the relative path
     let getGame api moves : HttpHandler =
         moves
-        |> Seq.skip 1
         |> Seq.toList
         |> playMoves api api.NewGame
         |> DTO.buildGame
@@ -69,9 +73,9 @@ module RestApi =
 
 let webapi (api : FsChess.App.Api) : HttpHandler =
     choose [
-        subRouteCi "/chess/games" <| choose [
-            routeCi "/new" >=> RestApi.newGame api
-            routexp "/(.*)/(.*)" <| RestApi.getGame api
+        subRouteCi "/chess/games/" <| choose [
+            routeCi "new" >=> RestApi.newGame api
+            routexpn "[KBRQK]?[a-h][1-8]" <| RestApi.getGame api
         ]
 
         RequestErrors.NOT_FOUND "Not found"

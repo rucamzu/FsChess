@@ -9,6 +9,7 @@
     <Compile Include="Functions.fs" />
     <Compile Include="Tuples.fs" />
     <Compile Include="String.fs" />
+    <Compile Include="Regex.fs" />
   </ItemGroup>
 
 </Project>
