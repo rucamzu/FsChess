@@ -8,30 +8,24 @@ open FsChess.Test.Common
 [<Tests>]
 let gameTests =
 
-    testList "game" <| List.collect id [
-        [
+    testList "game" [
+        
+        testTheory "pawn at initial position can move one square forward" [
             Pieces.WhitePawn, Squares.A2, Squares.A3
-        ]
-        |> List.map (fun (piece, atSquare, toSquare) -> 
-            test $"{piece} to {toSquare} from {atSquare}" {
-                let game = Game.newGame
-                let move = game |> Game.playableMoves |> List.find (Move.isMove piece atSquare toSquare)
-                let game' = game |> Game.play move
-                game'
-                |> Game.board
-                |> Board.getAt toSquare
-                |> Option.get
-                |> Expect.equal piece $"{piece} is not at {toSquare} after {move}"
-            })
+        ] <| fun (piece, atSquare, toSquare) -> 
+            let move = Game.newGame |> Game.playableMoves |> List.find (Move.isMove piece atSquare toSquare)
+            Game.newGame
+            |> Game.play move
+            |> Game.board
+            |> Board.getAt toSquare
+            |> Option.get
+            |> Expect.equal piece $"{piece} is not at {toSquare} after {move}"
 
-        [
+        testTheory "pawn at initial position can move two squares forward" [
             Pieces.WhitePawn, Squares.E2
-        ]
-        |> List.map (fun (pawn, atSquare) ->
-            test $"{pawn} at {atSquare} can move two squares forward" {
-                Game.newGame
-                |> Game.playableMoves
-                |> Expect.contains (Move.makeMove pawn atSquare (atSquare |> Square.atNextRank |> Square.atNextRank)) $"{pawn} at {atSquare} cannot move two squares forward"
-            })
+        ] <| fun (pawn, atSquare) ->
+            Game.newGame
+            |> Game.playableMoves
+            |> Expect.contains (Move.makeMove pawn atSquare (atSquare |> Square.atNextRank |> Square.atNextRank)) $"{pawn} at {atSquare} cannot move two squares forward"
 
     ]

@@ -1,4 +1,5 @@
-﻿module FsChess.Common.Functions
+﻿[<AutoOpen>]
+module FsChess.Common.Functions
 
 let curry2 f = fun a b -> f (a, b)
 let curry3 f = fun a b c -> f (a, b, c)
@@ -12,3 +13,5 @@ let uncurry3 f = fun (a, b, c) -> f a b c
 let uncurry4 f = fun (a, b, c, d) -> f a b c d
 let uncurry5 f = fun (a, b, c, d, e) -> f a b c d e
 let uncurry = uncurry2
+
+let flip f b a = f a b
